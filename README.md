@@ -1,66 +1,171 @@
-## Excel to Insights
+# Excel to Insights
 
-Upload Excel files (.xls/.xlsx), map columns to X/Y, and generate interactive 2D/3D charts. Save and revisit your history, and optionally enable an Admin panel with usage insights.
+A full-stack web application for uploading Excel files, analyzing data, and generating interactive 2D/3D charts. Built with Next.js and Supabase, featuring user authentication, data visualization, and an admin dashboard.
 
-### Tech Stack
-- Next.js 15 (App Router), React 19, TypeScript
-- Supabase (Auth, Postgres, RLS)
-- Tailwind CSS 4, Radix UI, Recharts
+## 📋 Project Overview
 
-### Features
-- Upload and parse Excel via `xlsx`
-- Column mapping for X and Y, multiple chart types (line, bar, pie, 3D column)
-- Persistent analysis history per user
-- Admin page (optional) with usage RPC guarded by RLS
+This platform allows users to:
+- Upload Excel files (.xls/.xlsx)
+- Dynamically select X and Y axes from column headers
+- Generate multiple chart types (line, bar, pie, scatter, 3D column)
+- Save analysis history with persistent storage
+- Download charts as PNG/PDF
+- Access admin panel for usage analytics (admin users only)
+
+## 🛠️ Tech Stack
+
+### Frontend
+- **Next.js 15** (App Router)
+- **React 19** with TypeScript
+- **Tailwind CSS 4** for styling
+- **Radix UI** components
+- **Recharts** for 2D charts
+- **Three.js** for 3D visualizations
+- **xlsx** (SheetJS) for Excel parsing
+
+### Backend
+- **Supabase** (PostgreSQL database)
+- **Supabase Auth** (JWT-based authentication)
+- **Row Level Security (RLS)** policies
+- **Server-side API routes** (Next.js API routes)
+
+## ✨ Features
+
+- ✅ **Excel File Upload & Parsing** - Supports .xls and .xlsx formats
+- ✅ **Dynamic Column Mapping** - Choose X and Y axes from Excel headers
+- ✅ **Multiple Chart Types** - Line, bar, pie, scatter, 3D column charts
+- ✅ **Interactive Visualizations** - Responsive charts with tooltips and legends
+- ✅ **Analysis History** - Save and revisit previous chart generations
+- ✅ **User Authentication** - Secure sign-up and login with Supabase Auth
+- ✅ **Admin Dashboard** - View user usage statistics (admin-only)
+- ✅ **Downloadable Charts** - Export charts as PNG or PDF
+- ✅ **Modern UI/UX** - Clean, responsive design with dark mode support
+
+## 🚀 Getting Started
 
 ### Prerequisites
-- Node.js 20+ recommended
-- Supabase project (URL + anon key)
 
-### Environment
-Create `.env.local` in the project root:
+- Node.js 20+ (recommended)
+- npm or yarn package manager
+- Supabase account (free tier works)
+
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/Hashirshaikh23/excel-to-insights.git
+   cd excel-to-insights
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Set up environment variables**
+   
+   Create a `.env.local` file in the root directory:
+   ```env
+   NEXT_PUBLIC_SUPABASE_URL=https://your-project-ref.supabase.co
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
+   ```
+
+   Get these values from your Supabase project settings → API.
+
+4. **Set up the database**
+   
+   Open your Supabase SQL Editor and run these scripts in order:
+   - `scripts/sql/010_create_analyses.sql` - Creates analyses table
+   - `scripts/sql/011_analyses_policies.sql` - Sets up RLS policies for analyses
+   - `scripts/sql/012_create_profiles.sql` - Creates profiles table and policies
+   - `scripts/sql/013_admin_rpc.sql` - Creates admin RPC function
+
+5. **Run the development server**
+   ```bash
+   npm run dev
+   ```
+
+6. **Open your browser**
+   
+   Navigate to [http://localhost:3000](http://localhost:3000)
+
+## 👤 Admin Setup
+
+After a user signs up, promote them to admin by running this SQL in Supabase:
+
+```sql
+UPDATE public.profiles
+SET role = 'admin'
+WHERE id = (SELECT id FROM auth.users WHERE email = 'your-email@example.com');
+```
+
+Then navigate to `/admin` to access the admin dashboard.
+
+## 📁 Project Structure
 
 ```
-NEXT_PUBLIC_SUPABASE_URL=https://<your-ref>.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=<your-anon-key>
+excel-to-insights/
+├── app/                    # Next.js App Router pages
+│   ├── (auth)/            # Authentication routes
+│   ├── admin/             # Admin dashboard
+│   ├── api/                # API routes
+│   └── dashboard/         # User dashboard
+├── components/             # React components
+│   ├── ui/                # Reusable UI components
+│   └── visuals/           # Chart rendering components
+├── lib/                    # Utility functions
+│   └── supabase/          # Supabase client/server config
+├── scripts/               # SQL migration scripts
+│   └── sql/               # Database setup scripts
+└── public/                # Static assets
 ```
 
-### Database setup (Supabase SQL)
-Run these scripts from `scripts/sql/` in the Supabase SQL editor, in order:
-1. `010_create_analyses.sql`
-2. `011_analyses_policies.sql`
-3. `012_create_profiles.sql`
-4. `013_admin_rpc.sql`
+## 📜 Available Scripts
 
-If you previously created a recursive profiles policy, drop it and re-run `012_create_profiles.sql`.
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run start` - Start production server
+- `npm run lint` - Run ESLint
 
-To promote a user to admin after they sign in once:
+## 🚢 Deployment
 
-```
--- Edit the email first
-update public.profiles
-set role = 'admin'
-where id = (select id from auth.users where email = 'admin@example.com');
-```
+### Vercel (Recommended)
 
-### Install & Run
-```
-npm install
-npm run dev
-```
+1. Push your code to GitHub
+2. Import your repository in Vercel
+3. Add environment variables:
+   - `NEXT_PUBLIC_SUPABASE_URL`
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+4. Deploy!
 
-Open `http://localhost:3000`.
+### Other Platforms
 
-### Project Scripts
-- `npm run dev` – start dev server
-- `npm run build` – production build
-- `npm run start` – start production server
+Make sure to:
+- Set the environment variables in your hosting platform
+- Run the SQL scripts in your Supabase project before first deployment
+- Ensure Node.js 20+ is available in your hosting environment
 
-### Deployment
-- Set `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` in your host’s env.
-- Run the SQL scripts on your Supabase database before first start.
+## 🔒 Security
 
-### License
-MIT
+- Row Level Security (RLS) enabled on all tables
+- Users can only access their own data
+- Admin functions protected by RLS policies
+- JWT-based authentication via Supabase
+
+## 📝 License
+
+This project is licensed under the MIT License.
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## 📧 Contact
+
+For questions or support, please open an issue on GitHub.
+
+---
+
+Built with ❤️ using Next.js and Supabase by Hashir
 
 
