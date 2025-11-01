@@ -28,6 +28,7 @@ This platform allows users to:
 - **Supabase Auth** (JWT-based authentication)
 - **Row Level Security (RLS)** policies
 - **Server-side API routes** (Next.js API routes)
+- **AI Integration** - xAI (Grok-4) or Groq (Llama) for data insights
 
 ## ✨ Features
 
@@ -35,6 +36,7 @@ This platform allows users to:
 - ✅ **Dynamic Column Mapping** - Choose X and Y axes from Excel headers
 - ✅ **Multiple Chart Types** - Line, bar, pie, scatter, 3D column charts
 - ✅ **Interactive Visualizations** - Responsive charts with tooltips and legends
+- ✅ **AI-Powered Insights** - Generate executive summaries with key trends and outliers using AI (xAI/Groq)
 - ✅ **Analysis History** - Save and revisit previous chart generations
 - ✅ **User Authentication** - Secure sign-up and login with Supabase Auth
 - ✅ **Admin Dashboard** - View user usage statistics (admin-only)
@@ -68,9 +70,17 @@ This platform allows users to:
    ```env
    NEXT_PUBLIC_SUPABASE_URL=https://your-project-ref.supabase.co
    NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
+   
+   # Optional: For AI Insights feature (choose one)
+   XAI_API_KEY=your-xai-api-key          # Recommended: xAI Grok-4
+   # OR
+   GROQ_API_KEY=your-groq-api-key        # Alternative: Groq Llama
    ```
 
-   Get these values from your Supabase project settings → API.
+   Get these values from:
+   - Supabase project settings → API
+   - xAI: https://console.x.ai (for XAI_API_KEY)
+   - Groq: https://console.groq.com (for GROQ_API_KEY)
 
 4. **Set up the database**
    
